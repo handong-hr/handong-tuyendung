@@ -73,6 +73,7 @@
   .tr-btn.loading{pointer-events:none;opacity:.6}
   .tr-btn.done{background:var(--green-soft);border-color:#aedcc2;color:var(--green)}
   .bi-hint{font-size:11px;color:var(--faint);margin-top:4px}
+  @keyframes spin{to{transform:rotate(360deg)}}
   .bi textarea.vn,.bi textarea.en-out{min-height:62px;resize:vertical}
   .bi:has(textarea) .tr-btn{align-self:center;height:40px}
 
@@ -93,6 +94,8 @@
   .thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
   .thumb{position:relative;width:90px;height:90px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);background:#fff}
   .thumb img{width:100%;height:100%;object-fit:cover}
+  .thumb.pdf-thumb{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--blue-soft);font-size:10px;color:var(--blue);text-align:center;gap:3px;padding:4px}
+  .thumb.pdf-thumb .pdf-ic{font-size:26px}
   .thumb .x{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
   .thumb .x:hover{background:#d33}
   .photo-box{width:110px;height:140px;border:2px dashed var(--blue-line);border-radius:var(--r-sm);background:var(--blue-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--blue);text-align:center;font-size:11px;overflow:hidden;position:relative;flex-shrink:0}
@@ -159,8 +162,8 @@
 
   <div class="intro">
     <span style="font-size:16px">💡</span>
-    <div><b>3 cách điền / Three ways:</b> ① <b>Đã có CV</b> → kéo thả file CV vào ô "CV của bạn" (hệ thống tự đọc). ② <b>Chưa có CV</b> → điền phần Kinh nghiệm chi tiết như một CV. ③ Đừng quên <b>đính kèm ảnh chân dung &amp; bằng cấp</b>. Mỗi ô có nút <b>🌐</b> để tự dịch sang tiếng Anh. Xong bấm <b>"Tải PDF"</b> + <b>"Tải dữ liệu"</b> gửi HR.
-    <br><span style="font-size:12px;opacity:.85">Drag &amp; drop your CV, or fill the experience section like a CV, attach photo &amp; certificates, click 🌐 to translate, then download and send to HR.</span></div>
+    <div><b>Cách dùng:</b> ① <b>Đã có CV</b> → kéo thả file CV vào ô bên dưới — AI sẽ <b>tự điền tất cả thông tin</b> giúp bạn. ② <b>Chưa có CV</b> → điền phần Kinh nghiệm chi tiết. ③ Đính kèm ảnh chân dung &amp; bằng cấp (PDF/ảnh). Mỗi ô có nút <b>🌐</b> để dịch sang tiếng Anh. Xong bấm <b>"Tải PDF"</b> + <b>"Tải dữ liệu"</b> gửi HR.
+    <br><span style="font-size:12px;opacity:.85">Drop your CV — AI auto-fills all fields. Or fill manually. Attach photo &amp; certificates. Click 🌐 to translate, then download and send to HR.</span></div>
   </div>
 
   <!-- CV UPLOAD (drag & drop) -->
@@ -170,14 +173,20 @@
       <div class="dropzone" id="cvDrop" onclick="document.getElementById('cvFile').click()">
         <div class="dz-ic">📄⬆️</div>
         <div class="dz-t">Kéo thả CV vào đây hoặc bấm để chọn file</div>
-        <div class="dz-s">Drag &amp; drop your CV — hỗ trợ PDF, Word (.docx), TXT</div>
+        <div class="dz-s">Hỗ trợ PDF, Word (.docx), TXT — AI sẽ tự điền form sau khi đọc</div>
       </div>
       <input type="file" id="cvFile" accept=".pdf,.doc,.docx,.txt" hidden>
       <div id="cvFileInfo"></div>
+      <!-- AI fill status bar -->
+      <div id="aiFillBar" style="display:none;margin-top:10px;background:var(--blue-soft);border:1px solid var(--blue-line);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;color:var(--blue);display:none;align-items:center;gap:10px">
+        <span id="aiFillIcon" style="font-size:18px">⏳</span>
+        <span id="aiFillMsg">AI đang đọc CV và điền thông tin...</span>
+        <span id="aiFillSpin" style="margin-left:auto;width:16px;height:16px;border:2px solid var(--blue-line);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite"></span>
+      </div>
       <div class="field" style="margin-top:12px">
         <label>Nội dung CV <span class="en">(CV content — tự động trích từ file, có thể sửa hoặc tự dán)</span></label>
-        <textarea id="cvText" style="min-height:120px" placeholder="Nội dung CV sẽ tự hiện ở đây sau khi bạn thả file. Bạn cũng có thể tự dán hoặc gõ vào đây."></textarea>
-        <div class="bi-hint">Nếu đã có CV: thả file ở trên (hệ thống tự đọc chữ). Nếu chưa có CV: bỏ qua phần này và điền phần Kinh nghiệm bên dưới.</div>
+        <textarea id="cvText" style="min-height:100px" placeholder="Nội dung CV sẽ tự hiện ở đây sau khi bạn thả file."></textarea>
+        <div class="bi-hint">Nếu đã có CV: thả file ở trên → AI tự điền form. Nếu chưa có CV: bỏ qua và điền phần Kinh nghiệm bên dưới.</div>
       </div>
     </div>
   </div>
@@ -195,13 +204,13 @@
           <input type="file" id="photoFile" accept="image/*" hidden>
         </div>
         <div style="flex:1;min-width:240px">
-          <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Hình ảnh khác <span class="en" style="color:var(--muted);font-weight:400;font-style:italic;font-size:12px">(Bằng cấp, chứng chỉ... / Certificates, degrees)</span></label>
+          <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Bằng cấp &amp; Chứng chỉ <span class="en" style="color:var(--muted);font-weight:400;font-style:italic;font-size:12px">(Degrees, certifications, National ID... — PDF hoặc ảnh)</span></label>
           <div class="dropzone" id="imgDrop" style="padding:16px" onclick="document.getElementById('imgFiles').click()">
-            <div class="dz-ic">🖼️</div>
-            <div class="dz-t">Kéo thả ảnh vào đây hoặc bấm chọn</div>
-            <div class="dz-s">Bằng cấp, chứng chỉ, CMND... — nhiều ảnh / multiple images</div>
+            <div class="dz-ic">📎</div>
+            <div class="dz-t">Kéo thả file vào đây hoặc bấm chọn</div>
+            <div class="dz-s">PDF, PNG, JPEG — bằng ĐH, chứng chỉ, CMND... nhiều file cùng lúc</div>
           </div>
-          <input type="file" id="imgFiles" accept="image/*" multiple hidden>
+          <input type="file" id="imgFiles" accept=".pdf,image/*" multiple hidden>
           <div class="thumbs" id="imgThumbs"></div>
         </div>
       </div>
@@ -724,15 +733,25 @@ function renderPhoto(){
 }
 async function handleImages(files){
   for(const f of files){
-    if(!f.type.startsWith('image/'))continue;
-    if(attachedImages.length>=12){toast('Tối đa 12 ảnh');break;}
-    try{ const url=await downscaleImage(f,1200,0.7); attachedImages.push({name:f.name,dataUrl:url}); }catch(e){}
+    if(attachedImages.length>=12){toast('Tối đa 12 file đính kèm');break;}
+    if(f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf')){
+      // PDF: lưu dưới dạng base64, không cần render ảnh
+      const buf=await f.arrayBuffer();
+      const b64=btoa(String.fromCharCode(...new Uint8Array(buf)));
+      attachedImages.push({name:f.name,dataUrl:'',pdfB64:b64,isPdf:true});
+    } else if(f.type.startsWith('image/')){
+      try{ const url=await downscaleImage(f,1200,0.7); attachedImages.push({name:f.name,dataUrl:url,isPdf:false}); }catch(e){}
+    }
   }
   renderImages(); save();
 }
 function renderImages(){
   const wrap=document.getElementById('imgThumbs');
-  wrap.innerHTML=attachedImages.map((im,i)=>`<div class="thumb"><img src="${im.dataUrl}" title="${im.name.replace(/"/g,'')}"><span class="x" onclick="attachedImages.splice(${i},1);renderImages();save()">×</span></div>`).join('');
+  wrap.innerHTML=attachedImages.map((im,i)=>
+    im.isPdf
+      ? `<div class="thumb pdf-thumb"><div class="pdf-ic">📄</div><div>${im.name.replace(/</g,'').substring(0,14)}</div><span class="x" onclick="attachedImages.splice(${i},1);renderImages();save()">×</span></div>`
+      : `<div class="thumb"><img src="${im.dataUrl}" title="${im.name.replace(/"/g,'')}"><span class="x" onclick="attachedImages.splice(${i},1);renderImages();save()">×</span></div>`
+  ).join('');
 }
 
 /* ---------- CV FILE (drag & drop, extract text) ---------- */
@@ -757,7 +776,9 @@ async function handleCvFile(file){
     if(text){
       const cur=document.getElementById('cvText').value.trim();
       document.getElementById('cvText').value = cur ? cur+'\n\n'+text : text;
-      setCvInfo(file.name,'✓ Đã đọc xong','ok'); save();
+      setCvInfo(file.name,'✓ Đã đọc — AI đang điền form...','ok');
+      save();
+      await autoFillFromCV(text); // AI fill
     } else { setCvInfo(file.name,'Không trích được chữ (CV scan ảnh?) — vui lòng dán tay','err'); }
   }catch(e){ console.error(e); setCvInfo(file.name,'Lỗi đọc file — thử lại hoặc dán tay','err'); }
 }
@@ -783,7 +804,148 @@ async function extractDocx(file){
   return r.value;
 }
 
-/* ---------- wire up drag & drop zones ---------- */
+/* ---------- GEMINI AI AUTO-FILL ---------- */
+const GEMINI_KEY = 'AQ.Ab8RN6JVb1yT-fGu0ufdtWPKZqmZ5dgk4m4vOs7fcVOAkN8fDA';
+
+function showAiBar(msg, done=false, err=false){
+  const bar=document.getElementById('aiFillBar');
+  const ico=document.getElementById('aiFillIcon');
+  const msgEl=document.getElementById('aiFillMsg');
+  const spin=document.getElementById('aiFillSpin');
+  bar.style.display='flex';
+  ico.textContent = err?'❌':done?'✅':'⏳';
+  msgEl.textContent = msg;
+  spin.style.display = done||err?'none':'block';
+  if(done||err) setTimeout(()=>bar.style.display='none', err?5000:3000);
+}
+
+async function autoFillFromCV(cvText){
+  if(!GEMINI_KEY||GEMINI_KEY==='PASTE_GEMINI_KEY_HERE') return; // key chưa set
+  if(!cvText||cvText.trim().length<80) return;
+  showAiBar('AI đang đọc CV và điền thông tin...');
+  const prompt=`Đọc CV sau và trích xuất thông tin. Trả về JSON duy nhất, không markdown, không giải thích.
+CV:
+${cvText.substring(0,4000)}
+
+JSON schema (tất cả trường đều optional, bỏ qua nếu không có trong CV):
+{
+  "fullName":"","gender":"Nam hoặc Nữ","dob":"dd/mm/yyyy","phone":"","email":"",
+  "placeOfBirth":"","placeOfBirthEn":"","ethnicity":"","religion":"",
+  "permanentAddress":"","permanentAddressEn":"",
+  "degree":"","degreeEn":"","major":"","majorEn":"",
+  "position":"","positionEn":"","expectedSalary":"",
+  "skills":"","skillsEn":"",
+  "education":[{"from":"","to":"","school":"","schoolEn":"","major":"","majorEn":"","gpa":""}],
+  "certifications":[""],
+  "workExperience":[{
+    "company":"","companyType":"","companyTypeEn":"",
+    "from":"","to":"","salary":"",
+    "position":"","positionEn":"",
+    "description":"","descriptionEn":"",
+    "projectTypes":"","projectTypesEn":"",
+    "reasonLeaving":"","reasonLeavingEn":""
+  }]
+}
+Quan trọng: dịch các trường *En sang tiếng Anh. Chỉ trả về JSON.`;
+
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:2000}})
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const raw=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+    const m=raw.match(/\{[\s\S]*\}/);
+    if(!m) throw new Error('Không đọc được kết quả AI');
+    const d=JSON.parse(m[0]);
+    fillFormFromData(d);
+    showAiBar('✅ AI đã điền xong! Vui lòng kiểm tra lại các thông tin.',true);
+  }catch(e){
+    console.error('AI fill error',e);
+    showAiBar('Không tự điền được — vui lòng kiểm tra kết nối hoặc điền tay.',false,true);
+  }
+}
+
+function setField(id, val){ if(val && document.getElementById(id)) document.getElementById(id).value=val; }
+function setBi(key, vi, en){
+  const f=document.querySelector(`.field[data-key="${key}"] .bi`);
+  if(!f) return;
+  if(vi) f.querySelector('.vn').value=vi;
+  if(en) f.querySelector('.en-out').value=en;
+}
+function setRadio(name, val){ if(val){ const el=document.querySelector(`input[name="${name}"][value="${val}"]`); if(el) el.checked=true; } }
+
+function fillFormFromData(d){
+  // Cá nhân
+  setField('fullName', d.fullName);
+  setRadio('gender', d.gender);
+  if(d.dob){ const dt=d.dob.split(/[\/\-]/); if(dt.length===3){ const iso=dt[2].length===4?`${dt[2]}-${dt[1].padStart(2,'0')}-${dt[0].padStart(2,'0')}`:d.dob; setField('dob',iso); } }
+  setField('phone', d.phone);
+  setField('email', d.email);
+  setBi('placeOfBirth', d.placeOfBirth, d.placeOfBirthEn);
+  setBi('ethnicity', d.ethnicity, d.ethnicity?'Kinh':'');
+  setBi('religion', d.religion, d.religion);
+  setBi('permAddr', d.permanentAddress, d.permanentAddressEn);
+  setBi('degree', d.degree, d.degreeEn);
+  setBi('major', d.major, d.majorEn);
+  // Tuyển dụng
+  setBi('position', d.position, d.positionEn);
+  setField('expectedSalary', d.expectedSalary);
+  // Kỹ năng
+  setBi('skills', d.skills, d.skillsEn);
+  // Học vấn — điền vào các block đã tạo, tạo thêm nếu cần
+  const edus=(d.education||[]).filter(e=>e.school||e.from);
+  if(edus.length){
+    // Xóa blocks rỗng, tạo đúng số cần
+    document.getElementById('eduList').innerHTML=''; eduN=0;
+    edus.forEach(()=>addEdu());
+    document.querySelectorAll('#eduList .edu-block').forEach((b,i)=>{
+      const e=edus[i]; if(!e) return;
+      b.querySelector('.e-from').value=e.from||'';
+      b.querySelector('.e-to').value=e.to||'';
+      b.querySelector('.e-gpa').value=e.gpa||'';
+      const bis=b.querySelectorAll('.bi');
+      if(bis[0]){bis[0].querySelector('.vn').value=e.school||'';bis[0].querySelector('.en-out').value=e.schoolEn||'';}
+      if(bis[1]){bis[1].querySelector('.vn').value=e.major||'';bis[1].querySelector('.en-out').value=e.majorEn||'';}
+    });
+  }
+  // Chứng chỉ
+  const certs=(d.certifications||[]).filter(Boolean);
+  if(certs.length){
+    document.getElementById('certList').innerHTML=''; certN=0;
+    certs.forEach(()=>addCert());
+    document.querySelectorAll('#certList .cert-block').forEach((b,i)=>{
+      const c=certs[i]; if(!c) return;
+      const bi=b.querySelector('.bi');
+      bi.querySelector('.vn').value=typeof c==='string'?c:(c.vi||c);
+      bi.querySelector('.en-out').value=typeof c==='string'?'':c.en||'';
+    });
+  }
+  // Kinh nghiệm
+  const works=(d.workExperience||[]).filter(w=>w.company||w.position);
+  if(works.length){
+    document.getElementById('workList').innerHTML=''; workN=0;
+    works.forEach(()=>addWork());
+    document.querySelectorAll('#workList .work-block').forEach((b,i)=>{
+      const w=works[i]; if(!w) return;
+      b.querySelector('.w-company').value=w.company||'';
+      b.querySelector('.w-from').value=w.from||'';
+      b.querySelector('.w-to').value=w.to||'';
+      b.querySelector('.w-salary').value=w.salary||'';
+      b.querySelector('.w-refpos').value=(w.reference&&w.reference.position)||'';
+      b.querySelector('.w-refmobile').value=(w.reference&&w.reference.mobile)||'';
+      const bis=b.querySelectorAll('.bi');
+      // bis order: type, pos, desc, proj, reason, refDept
+      if(bis[0]){bis[0].querySelector('.vn').value=w.companyType||'';bis[0].querySelector('.en-out').value=w.companyTypeEn||'';}
+      if(bis[1]){bis[1].querySelector('.vn').value=w.position||'';bis[1].querySelector('.en-out').value=w.positionEn||'';}
+      if(bis[2]){bis[2].querySelector('.vn').value=w.description||'';bis[2].querySelector('.en-out').value=w.descriptionEn||'';}
+      if(bis[3]){bis[3].querySelector('.vn').value=w.projectTypes||'';bis[3].querySelector('.en-out').value=w.projectTypesEn||'';}
+      if(bis[4]){bis[4].querySelector('.vn').value=w.reasonLeaving||'';bis[4].querySelector('.en-out').value=w.reasonLeavingEn||'';}
+    });
+  }
+  save();
+}
 function wireDrop(zoneId,handler,multiple){
   const z=document.getElementById(zoneId);
   ['dragover','dragenter'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add('over');}));
