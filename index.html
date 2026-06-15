@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hồ sơ ứng tuyển — Job Application | Handong</title>
+<style>
+  :root{
+    --navy:#1F3864; --blue:#2E75B6; --blue-soft:#E8EFF7; --blue-line:#Bcd2ea;
+    --ink:#1a2230; --muted:#5b6b80; --faint:#8a98aa;
+    --bg:#eef1f5; --card:#ffffff; --line:#d6deea; --line2:#e7edf4;
+    --green:#1a9c54; --green-soft:#e3f5ec; --amber:#b7791f;
+    --r:10px; --r-sm:7px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select,textarea{font-family:inherit;font-size:14px}
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 14px 60px}
+
+  /* Header */
+  header{background:var(--card);border-bottom:3px solid var(--navy);position:sticky;top:0;z-index:30;box-shadow:0 1px 8px rgba(20,40,70,.06)}
+  .head-inner{max-width:920px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .h{width:42px;height:42px;background:var(--navy);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;letter-spacing:-1px}
+  .brand .t b{font-size:16px;color:var(--navy);letter-spacing:.5px}
+  .brand .t span{display:block;font-size:10.5px;color:var(--faint);letter-spacing:.8px;text-transform:uppercase}
+  .head-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .tagline{color:var(--blue);font-size:12px;font-weight:600;text-align:right;line-height:1.3;display:none}
+  @media(min-width:760px){.tagline{display:block}}
+
+  .btn{border:1px solid var(--line);background:#fff;border-radius:var(--r-sm);padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--ink);display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+  .btn:hover{border-color:var(--blue);color:var(--blue)}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .btn-primary:hover{background:#16294a;color:#fff}
+  .btn-tr{background:var(--blue-soft);border-color:var(--blue-line);color:var(--blue)}
+  .btn-tr:hover{background:var(--blue);color:#fff}
+
+  /* Title */
+  .doc-title{text-align:center;padding:26px 0 10px}
+  .doc-title h1{font-size:27px;color:var(--navy);letter-spacing:.5px;font-weight:800}
+  .doc-title .en{font-size:14px;color:var(--blue);font-style:italic;margin-top:2px;letter-spacing:1px}
+  .doc-title .code{font-size:11px;color:var(--faint);margin-top:6px}
+
+  .intro{background:#fff7e6;border:1px solid #f0d9a8;border-radius:var(--r);padding:12px 16px;font-size:13px;color:#7a5d1d;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start}
+  .intro b{color:#5e470f}
+
+  /* Section */
+  .section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+  .sec-head{background:var(--navy);color:#fff;padding:11px 18px;font-weight:700;font-size:14px;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+  .sec-head .en{font-weight:400;font-style:italic;opacity:.8;font-size:12.5px}
+  .sec-body{padding:18px}
+
+  .field{margin-bottom:15px}
+  .field:last-child{margin-bottom:0}
+  .field > label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+  .field > label .en{color:var(--muted);font-weight:400;font-style:italic;font-size:12px}
+  .req{color:#d33;margin-left:2px}
+
+  input[type=text],input[type=tel],input[type=email],input[type=date],input[type=number],select,textarea{
+    width:100%;background:#fbfcfe;border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;color:var(--ink);transition:border-color .15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);background:#fff}
+  textarea{resize:vertical;min-height:46px}
+
+  /* bilingual field */
+  .bi{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+  .bi .vn,.bi .en-out{width:100%}
+  .bi .en-out{background:var(--blue-soft);border-color:var(--blue-line);color:var(--navy)}
+  .bi .en-out::placeholder{color:#9bb3d0}
+  .tr-btn{flex-shrink:0;width:40px;border:1px solid var(--blue-line);background:var(--blue-soft);border-radius:var(--r-sm);color:var(--blue);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s;align-self:stretch}
+  .tr-btn:hover{background:var(--blue);color:#fff}
+  .tr-btn.loading{pointer-events:none;opacity:.6}
+  .tr-btn.done{background:var(--green-soft);border-color:#aedcc2;color:var(--green)}
+  .bi-hint{font-size:11px;color:var(--faint);margin-top:4px}
+  @media(max-width:600px){.bi{grid-template-columns:1fr;gap:6px}.tr-btn{width:100%;height:34px}}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  .radio-row{display:flex;flex-wrap:wrap;gap:16px;padding:4px 0}
+  .radio-row label{display:flex;align-items:center;gap:7px;font-size:13.5px;cursor:pointer}
+  .radio-row input{width:17px;height:17px;accent-color:var(--navy);cursor:pointer}
+  .radio-row .en{color:var(--muted);font-style:italic;font-size:12px}
+
+  .sub-card{border:1px solid var(--line2);border-radius:var(--r-sm);padding:14px;margin-bottom:12px;background:#fafbfd;position:relative}
+  .sub-card .badge{position:absolute;top:-9px;left:14px;background:var(--blue);color:#fff;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+  .sub-card .rm{position:absolute;top:10px;right:12px;color:var(--faint);font-size:13px;font-weight:600;padding:2px 8px;border-radius:5px}
+  .sub-card .rm:hover{background:#fde8e8;color:#d33}
+  .add-btn{width:100%;border:1.5px dashed var(--blue-line);background:var(--blue-soft);color:var(--blue);border-radius:var(--r-sm);padding:10px;font-weight:600;font-size:13px;transition:all .15s}
+  .add-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  .edu-grid{display:grid;grid-template-columns:80px 80px 1fr 1fr 70px 90px;gap:8px;align-items:end}
+  .edu-grid .mini-label{font-size:10.5px;color:var(--muted);margin-bottom:3px;display:block}
+  @media(max-width:680px){.edu-grid{grid-template-columns:1fr 1fr}}
+
+  footer{text-align:center;padding:24px 0 0;color:var(--faint);font-size:12px}
+  .bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(20,40,70,.07);padding:10px 14px;z-index:25}
+  .bar-inner{max-width:920px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .save-status{font-size:12px;color:var(--green);margin-left:auto;display:flex;align-items:center;gap:6px}
+  .save-status .d{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+  .toast{position:fixed;bottom:74px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--navy);color:#fff;border-radius:var(--r);padding:11px 18px;font-size:13px;font-weight:500;z-index:60;transition:transform .3s cubic-bezier(.2,.9,.3,1.2);box-shadow:0 6px 24px rgba(20,40,70,.25)}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  @media print{
+    header,.bar,.intro,.tr-btn,.add-btn,.sub-card .rm,.head-actions,footer{display:none!important}
+    body{background:#fff}
+    .section{break-inside:avoid;border:1px solid #999}
+    .bi{grid-template-columns:1fr 1fr;gap:6px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="brand">
+      <div class="h">H</div>
+      <div class="t"><b>HANDONG</b><span>Engineering &amp; Construction</span></div>
+    </div>
+    <div class="tagline">BUILDING TRUST,<br>BUILDING PARTNERSHIPS</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doc-title">
+    <h1>HỒ SƠ ỨNG TUYỂN</h1>
+    <div class="en">JOB APPLICATION</div>
+    <div class="code">HDF-5003-RC-002-V02</div>
+  </div>
+
+  <div class="intro">
+    <span style="font-size:16px">💡</span>
+    <div><b>2 cách điền / Two ways:</b> ① Nếu bạn <b>đã có CV</b> → dán nội dung vào ô "CV của bạn" bên dưới. ② Nếu <b>chưa có CV</b> → điền trực tiếp phần Kinh nghiệm. Ở mỗi ô có nút <b>🌐</b> để <b>tự dịch sang tiếng Anh</b>. Xong bấm <b>"Tải PDF"</b> (nộp hồ sơ / để lọc CV) và <b>"Tải dữ liệu"</b> gửi lại HR.
+    <br><span style="font-size:12px;opacity:.85">Either paste your existing CV, or fill the experience section directly. Click 🌐 to auto-translate, then download PDF + data file and send back to HR.</span></div>
+  </div>
+
+  <!-- CV PASTE (optional) -->
+  <div class="section">
+    <div class="sec-head">CV CỦA BẠN <span class="en">Your CV — tùy chọn / optional</span></div>
+    <div class="sec-body">
+      <div class="field">
+        <label>Đã có CV? Dán toàn bộ nội dung vào đây <span class="en">(Already have a CV? Paste its full content here)</span></label>
+        <textarea id="cvText" style="min-height:130px" placeholder="Mở file CV của bạn, copy toàn bộ và dán vào đây. Hệ thống sẽ gộp vào hồ sơ. / Copy & paste your whole CV here."></textarea>
+        <div class="bi-hint">Nếu bạn dán CV ở đây thì có thể bỏ qua phần Kinh nghiệm bên dưới (hoặc điền thêm cho rõ). Nếu chưa có CV, hãy điền phần Kinh nghiệm.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANDIDATE INFORMATION -->
+  <div class="section">
+    <div class="sec-head">THÔNG TIN ỨNG VIÊN <span class="en">Candidate Information</span></div>
+    <div class="sec-body">
+      <div class="field">
+        <label>Họ và tên <span class="en">(Full Name)</span><span class="req">*</span></label>
+        <input type="text" id="fullName" placeholder="VD: NGUYỄN VĂN AN">
+      </div>
+      <div class="field">
+        <label>Giới tính <span class="en">(Gender)</span></label>
+        <div class="radio-row">
+          <label><input type="radio" name="gender" value="Nam">Nam <span class="en">(Male)</span></label>
+          <label><input type="radio" name="gender" value="Nữ">Nữ <span class="en">(Female)</span></label>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Ngày sinh <span class="en">(Date of Birth)</span></label><input type="date" id="dob"></div>
+        <div class="field" data-bi data-key="placeOfBirth"><label>Nơi sinh <span class="en">(Place of Birth)</span></label></div>
+      </div>
+      <div class="grid2">
+        <div class="field" data-bi data-key="ethnicity"><label>Dân tộc <span class="en">(Ethnicity)</span></label></div>
+        <div class="field" data-bi data-key="religion"><label>Tôn giáo <span class="en">(Religion)</span></label></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Số căn cước <span class="en">(National ID)</span></label><input type="text" id="nationalId"></div>
+        <div class="field"><label>Ngày cấp <span class="en">(Issue Date)</span></label><input type="date" id="issueDate"></div>
+        <div class="field" data-bi data-key="placeOfIssue"><label>Nơi cấp <span class="en">(Place of Issue)</span></label></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Số điện thoại <span class="en">(Mobile)</span><span class="req">*</span></label><input type="tel" id="phone" placeholder="09xx xxx xxx"></div>
+        <div class="field"><label>Email <span class="en">(Email)</span></label><input type="email" id="email" placeholder="email@example.com"></div>
+      </div>
+      <div class="field">
+        <label>Tình trạng hôn nhân <span class="en">(Marital Status)</span></label>
+        <div class="radio-row">
+          <label><input type="radio" name="marital" value="Độc thân">Độc thân <span class="en">(Single)</span></label>
+          <label><input type="radio" name="marital" value="Kết hôn">Kết hôn <span class="en">(Married)</span></label>
+          <label><input type="radio" name="marital" value="Ly hôn">Ly hôn <span class="en">(Divorced)</span></label>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field" data-bi data-key="degree"><label>Bằng cấp <span class="en">(Degree)</span></label></div>
+        <div class="field" data-bi data-key="major"><label>Chuyên ngành <span class="en">(Major)</span></label></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Chiều cao <span class="en">(Height)</span></label><input type="text" id="height" placeholder="VD: 170 cm"></div>
+        <div class="field"><label>Cân nặng <span class="en">(Weight)</span></label><input type="text" id="weight" placeholder="VD: 65 kg"></div>
+      </div>
+      <div class="field" data-bi data-key="permAddr"><label>Địa chỉ thường trú <span class="en">(Permanent Address)</span></label></div>
+      <div class="field" data-bi data-key="tempAddr"><label>Địa chỉ tạm trú <span class="en">(Temporary Address)</span></label></div>
+      <div class="sub-card" style="margin-top:6px">
+        <span class="badge">Liên hệ khẩn cấp / Emergency Contact</span>
+        <div style="height:6px"></div>
+        <div class="grid3">
+          <div class="field"><label>Họ tên <span class="en">(Name)</span></label><input type="text" id="emName"></div>
+          <div class="field"><label>Điện thoại <span class="en">(Mobile)</span></label><input type="tel" id="emMobile"></div>
+          <div class="field" data-bi data-key="emRel"><label>Mối quan hệ <span class="en">(Relationship)</span></label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECRUITMENT INFORMATION -->
+  <div class="section">
+    <div class="sec-head">THÔNG TIN TUYỂN DỤNG <span class="en">Recruitment Information</span></div>
+    <div class="sec-body">
+      <div class="grid2">
+        <div class="field" data-bi data-key="position"><label>Vị trí ứng tuyển <span class="en">(Applying for position)</span><span class="req">*</span></label></div>
+        <div class="field"><label>Mức thu nhập mong muốn <span class="en">(Gross salary expected)</span></label><input type="text" id="expectedSalary" placeholder="VD: 25.000.000 VNĐ"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Ngày bắt đầu làm việc <span class="en">(Starting date)</span></label><input type="date" id="startingDate"></div>
+        <div class="field">
+          <label>Nơi mong muốn làm việc <span class="en">(Work location)</span></label>
+          <div class="radio-row">
+            <label><input type="radio" name="workloc" value="Site">Công trường <span class="en">(Site)</span></label>
+            <label><input type="radio" name="workloc" value="Office">Văn phòng <span class="en">(Office)</span></label>
+            <label><input type="radio" name="workloc" value="Both">Cả hai <span class="en">(Both)</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Có gặp trở ngại khi điều động đến dự án xa nhà không? <span class="en">(Any difficulty with transfers to projects far from home?)</span></label>
+        <div class="radio-row">
+          <label><input type="radio" name="transfer" value="No">Không <span class="en">(No)</span></label>
+          <label><input type="radio" name="transfer" value="Yes">Có <span class="en">(Yes)</span></label>
+        </div>
+      </div>
+      <div class="sub-card">
+        <span class="badge">Người quen tại Handong / Anyone at Handong</span>
+        <div style="height:6px"></div>
+        <div class="grid2">
+          <div class="field"><label>Họ tên <span class="en">(Full name)</span></label><input type="text" id="relName" placeholder="Để trống nếu không có"></div>
+          <div class="field" data-bi data-key="relRel"><label>Mối quan hệ <span class="en">(Relation)</span></label></div>
+        </div>
+      </div>
+      <div class="field" data-bi data-key="channel"><label>Biết thông tin tuyển dụng qua kênh nào? <span class="en">(Recruitment channel)</span></label></div>
+    </div>
+  </div>
+
+  <!-- PROFESSIONAL SKILLS -->
+  <div class="section">
+    <div class="sec-head">HỌC VẤN – CHỨNG CHỈ <span class="en">Education &amp; Certifications</span></div>
+    <div class="sec-body">
+      <div class="field"><label>Trình độ chuyên môn <span class="en">(Professional Qualification)</span></label></div>
+      <div id="eduList"></div>
+      <button class="add-btn" onclick="addEdu()">+ Thêm dòng học vấn / Add education</button>
+
+      <div class="field" style="margin-top:18px"><label>Chứng chỉ <span class="en">(Certifications)</span></label></div>
+      <div id="certList"></div>
+      <button class="add-btn" onclick="addCert()">+ Thêm chứng chỉ / Add certification</button>
+    </div>
+  </div>
+
+  <!-- WORK EXPERIENCE -->
+  <div class="section">
+    <div class="sec-head">KINH NGHIỆM LÀM VIỆC <span class="en">Work Experience — mới nhất trước / most recent first</span></div>
+    <div class="sec-body">
+      <div id="workList"></div>
+      <button class="add-btn" onclick="addWork()">+ Thêm kinh nghiệm / Add work experience</button>
+    </div>
+  </div>
+
+  <footer>Tài liệu nội bộ — Confidential · Handong Engineering &amp; Construction · HDF-5003-RC-002-V02</footer>
+</div>
+
+<div class="bar">
+  <div class="bar-inner">
+    <button class="btn btn-tr" onclick="translateAll()">🌐 Dịch tất cả</button>
+    <button class="btn btn-primary" onclick="downloadPDF()">📄 Tải PDF (nộp / lọc CV)</button>
+    <button class="btn" onclick="downloadJSON()">💾 Tải dữ liệu gửi HR (.json)</button>
+    <button class="btn" onclick="clearAll()" title="Xóa và làm lại">↺</button>
+    <span class="save-status"><span class="d"></span><span id="saveStatus">Đã lưu nháp</span></span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORE='handong_application_v1';
+
+/* ---------- bilingual field builder ---------- */
+function buildBiFields(){
+  document.querySelectorAll('[data-bi]').forEach((f,i)=>{
+    if(f.querySelector('.bi'))return;
+    const key = f.dataset.key || ('bi'+i);
+    f.dataset.key = key;
+    const wrap=document.createElement('div');
+    wrap.className='bi';
+    wrap.innerHTML=`
+      <input type="text" class="vn" placeholder="Tiếng Việt">
+      <button class="tr-btn" title="Dịch sang tiếng Anh" type="button">🌐</button>
+      <input type="text" class="en-out" placeholder="English (tự động)">`;
+    f.appendChild(wrap);
+    const hint=document.createElement('div');hint.className='bi-hint';hint.textContent='Gõ tiếng Việt → bấm 🌐 để dịch';
+    f.appendChild(hint);
+    wrap.querySelector('.tr-btn').addEventListener('click',()=>translateField(wrap));
+    wrap.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',scheduleSave));
+  });
+}
+
+/* ---------- translation (MyMemory free API, no key) ---------- */
+async function translateText(text){
+  const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair=vi|en';
+  const res=await fetch(url);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const data=await res.json();
+  const t=data?.responseData?.translatedText;
+  if(!t) throw new Error('no translation');
+  return t;
+}
+async function translateField(wrap){
+  const vn=wrap.querySelector('.vn').value.trim();
+  const enOut=wrap.querySelector('.en-out');
+  const btn=wrap.querySelector('.tr-btn');
+  if(!vn){toast('Hãy nhập tiếng Việt trước');return;}
+  btn.classList.add('loading');btn.textContent='⏳';
+  try{
+    enOut.value=await translateText(vn);
+    btn.classList.remove('loading');btn.classList.add('done');btn.textContent='✓';
+    setTimeout(()=>{btn.classList.remove('done');btn.textContent='🌐'},1500);
+    save();
+  }catch(e){
+    btn.classList.remove('loading');btn.textContent='🌐';
+    toast('Không dịch được — vui lòng kiểm tra mạng hoặc tự gõ tiếng Anh');
+    enOut.focus();
+  }
+}
+async function translateAll(){
+  const wraps=[...document.querySelectorAll('.bi')].filter(w=>w.querySelector('.vn').value.trim() && !w.querySelector('.en-out').value.trim());
+  if(!wraps.length){toast('Không có ô nào cần dịch');return;}
+  toast('Đang dịch '+wraps.length+' ô...');
+  for(const w of wraps){ await translateField(w); await new Promise(r=>setTimeout(r,350)); }
+  toast('Đã dịch xong ✓');
+}
+
+/* ---------- dynamic blocks ---------- */
+function biMini(labelVi,labelEn){
+  return `<div class="field" data-bi data-key="${'k'+Math.random().toString(36).slice(2,7)}"><label>${labelVi} <span class="en">(${labelEn})</span></label></div>`;
+}
+let eduN=0,certN=0,workN=0;
+
+function addEdu(){
+  eduN++;
+  const d=document.createElement('div');d.className='sub-card edu-block';
+  d.innerHTML=`<span class="rm" onclick="this.parentElement.remove();save()">✕ Xóa</span>
+    <div class="edu-grid">
+      <div><span class="mini-label">Từ / From</span><input type="text" class="e-from" placeholder="2018"></div>
+      <div><span class="mini-label">Đến / To</span><input type="text" class="e-to" placeholder="2022"></div>
+      <div data-bi data-key="eduSchool${eduN}"><span class="mini-label">Trường / School</span></div>
+      <div data-bi data-key="eduMajor${eduN}"><span class="mini-label">Chuyên ngành / Major</span></div>
+      <div><span class="mini-label">Điểm TB / GPA</span><input type="text" class="e-gpa"></div>
+      <div><span class="mini-label">Học bổng / Scholarship</span><input type="text" class="e-sch"></div>
+    </div>`;
+  document.getElementById('eduList').appendChild(d);
+  buildBiFields();bindInputs(d);save();
+}
+function addCert(){
+  certN++;
+  const d=document.createElement('div');d.className='sub-card cert-block';d.style.padding='12px 14px';
+  d.innerHTML=`<span class="rm" onclick="this.parentElement.remove();save()">✕</span>
+    <div data-bi data-key="cert${certN}" style="margin-right:30px"><label style="font-size:12px">Chứng chỉ <span class="en">(Certification)</span></label></div>`;
+  document.getElementById('certList').appendChild(d);
+  buildBiFields();bindInputs(d);save();
+}
+function addWork(){
+  workN++;
+  const n=document.getElementById('workList').children.length+1;
+  const d=document.createElement('div');d.className='sub-card work-block';d.style.marginTop='16px';
+  d.innerHTML=`<span class="badge">Công việc ${n} / Job ${n}</span>
+    <span class="rm" onclick="this.parentElement.remove();renumberWork();save()">✕ Xóa</span>
+    <div style="height:8px"></div>
+    <div class="grid2">
+      <div class="field"><label>Tên công ty <span class="en">(Company)</span></label><input type="text" class="w-company"></div>
+      <div class="field" data-bi data-key="wType${workN}"><label>Loại hình công ty <span class="en">(Company type)</span></label></div>
+    </div>
+    <div class="grid3">
+      <div class="field"><label>Từ <span class="en">(From)</span></label><input type="text" class="w-from" placeholder="2018"></div>
+      <div class="field"><label>Đến <span class="en">(To)</span></label><input type="text" class="w-to" placeholder="2022"></div>
+      <div class="field"><label>Mức lương <span class="en">(Salary)</span></label><input type="text" class="w-salary"></div>
+    </div>
+    <div class="field" data-bi data-key="wPos${workN}"><label>Vị trí <span class="en">(Position)</span></label></div>
+    <div class="field" data-bi data-key="wProj${workN}"><label>Loại hình dự án đã tham gia <span class="en">(Project types)</span></label></div>
+    <div class="field" data-bi data-key="wReason${workN}"><label>Lý do thôi việc <span class="en">(Reason for leaving)</span></label></div>
+    <div class="grid3">
+      <div class="field"><label>Người tham khảo - Chức vụ <span class="en">(Reference - Position)</span></label><input type="text" class="w-refpos"></div>
+      <div class="field" data-bi data-key="wRefDept${workN}"><label>Phòng ban/Dự án <span class="en">(Dept./Project)</span></label></div>
+      <div class="field"><label>Điện thoại <span class="en">(Mobile)</span></label><input type="tel" class="w-refmobile"></div>
+    </div>`;
+  document.getElementById('workList').appendChild(d);
+  buildBiFields();bindInputs(d);save();
+}
+function renumberWork(){
+  document.querySelectorAll('#workList .work-block').forEach((b,i)=>{b.querySelector('.badge').textContent=`Công việc ${i+1} / Job ${i+1}`;});
+}
+function bindInputs(scope){ scope.querySelectorAll('input,select,textarea').forEach(inp=>inp.addEventListener('input',scheduleSave)); }
+
+/* ---------- collect / save / load ---------- */
+function v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function radio(name){const e=document.querySelector(`input[name="${name}"]:checked`);return e?e.value:'';}
+
+function bk(key){ // bi value by data-key
+  const f=document.querySelector(`.field[data-key="${key}"] .bi`);
+  return f?{vi:f.querySelector('.vn').value.trim(),en:f.querySelector('.en-out').value.trim()}:{vi:'',en:''};
+}
+function collect(){
+  const data={
+    fullName:v('fullName'), gender:radio('gender'),
+    dob:v('dob'), placeOfBirth:bk('placeOfBirth').vi, placeOfBirthEn:bk('placeOfBirth').en,
+    ethnicity:bk('ethnicity').vi, ethnicityEn:bk('ethnicity').en,
+    religion:bk('religion').vi, religionEn:bk('religion').en,
+    nationalId:v('nationalId'), issueDate:v('issueDate'),
+    placeOfIssue:bk('placeOfIssue').vi, placeOfIssueEn:bk('placeOfIssue').en,
+    phone:v('phone'), email:v('email'),
+    maritalStatus:radio('marital'),
+    degree:bk('degree').vi, degreeEn:bk('degree').en,
+    major:bk('major').vi, majorEn:bk('major').en,
+    height:v('height'), weight:v('weight'),
+    permanentAddress:bk('permAddr').vi, permanentAddressEn:bk('permAddr').en,
+    temporaryAddress:bk('tempAddr').vi, temporaryAddressEn:bk('tempAddr').en,
+    emergencyContact:{name:v('emName'),mobile:v('emMobile'),relationship:bk('emRel').vi,relationshipEn:bk('emRel').en},
+    position:bk('position').vi, positionEn:bk('position').en,
+    expectedSalary:v('expectedSalary'), startingDate:v('startingDate'),
+    workLocation:radio('workloc'), transferDifficulty:radio('transfer'),
+    relativeAtHandong:{name:v('relName'),relation:bk('relRel').vi,relationEn:bk('relRel').en},
+    recruitmentChannel:bk('channel').vi, recruitmentChannelEn:bk('channel').en,
+    cvText:v('cvText'),
+    education:[], certifications:[], workExperience:[]
+  };
+  // education
+  document.querySelectorAll('#eduList .edu-block').forEach(b=>{
+    const bis=b.querySelectorAll('.bi');
+    data.education.push({
+      from:b.querySelector('.e-from').value.trim(), to:b.querySelector('.e-to').value.trim(),
+      school:bis[0]?.querySelector('.vn').value.trim()||'', schoolEn:bis[0]?.querySelector('.en-out').value.trim()||'',
+      major:bis[1]?.querySelector('.vn').value.trim()||'', majorEn:bis[1]?.querySelector('.en-out').value.trim()||'',
+      gpa:b.querySelector('.e-gpa').value.trim(), scholarship:b.querySelector('.e-sch').value.trim()
+    });
+  });
+  // certs
+  document.querySelectorAll('#certList .cert-block').forEach(b=>{
+    const bi=b.querySelector('.bi');const vi=bi.querySelector('.vn').value.trim();const en=bi.querySelector('.en-out').value.trim();
+    if(vi||en) data.certifications.push(en?`${vi} (${en})`:vi);
+  });
+  // work
+  document.querySelectorAll('#workList .work-block').forEach(b=>{
+    const bis=b.querySelectorAll('.bi'); // order: type, pos, proj, reason, refDept
+    data.workExperience.push({
+      company:b.querySelector('.w-company').value.trim(),
+      companyType:bis[0]?.querySelector('.vn').value.trim()||'', companyTypeEn:bis[0]?.querySelector('.en-out').value.trim()||'',
+      from:b.querySelector('.w-from').value.trim(), to:b.querySelector('.w-to').value.trim(), salary:b.querySelector('.w-salary').value.trim(),
+      position:bis[1]?.querySelector('.vn').value.trim()||'', positionEn:bis[1]?.querySelector('.en-out').value.trim()||'',
+      projectTypes:bis[2]?.querySelector('.vn').value.trim()||'', projectTypesEn:bis[2]?.querySelector('.en-out').value.trim()||'',
+      reasonLeaving:bis[3]?.querySelector('.vn').value.trim()||'', reasonLeavingEn:bis[3]?.querySelector('.en-out').value.trim()||'',
+      reference:{position:b.querySelector('.w-refpos').value.trim(),
+                 dept:bis[4]?.querySelector('.vn').value.trim()||'', deptEn:bis[4]?.querySelector('.en-out').value.trim()||'',
+                 mobile:b.querySelector('.w-refmobile').value.trim()}
+    });
+  });
+  return data;
+}
+
+let saveTimer;
+function scheduleSave(){clearTimeout(saveTimer);document.getElementById('saveStatus').textContent='Đang lưu...';saveTimer=setTimeout(save,500);}
+function save(){
+  try{
+    const snapshot=serializeDOM();
+    localStorage.setItem(STORE,JSON.stringify(snapshot));
+    document.getElementById('saveStatus').textContent='Đã lưu nháp';
+  }catch(e){console.warn(e);}
+}
+const FIXED_BI_KEYS=['placeOfBirth','ethnicity','religion','placeOfIssue','degree','major','permAddr','tempAddr','emRel','position','relRel','channel'];
+// serialize raw DOM values (vn+en for bi, plus dynamic blocks) to restore exactly
+function serializeDOM(){
+  const s={fixed:{},bi:{},edu:[],cert:[],work:[],radios:{}};
+  ['fullName','dob','nationalId','issueDate','phone','email','height','weight','expectedSalary','startingDate','emName','emMobile','relName','cvText'].forEach(id=>s.fixed[id]=v(id));
+  ['gender','marital','workloc','transfer'].forEach(n=>s.radios[n]=radio(n));
+  FIXED_BI_KEYS.forEach(k=>{const f=document.querySelector(`.field[data-key="${k}"] .bi`);if(f)s.bi[k]={vi:f.querySelector('.vn').value,en:f.querySelector('.en-out').value};});
+  document.querySelectorAll('#eduList .edu-block').forEach(b=>{
+    const bis=b.querySelectorAll('.bi');
+    s.edu.push({from:b.querySelector('.e-from').value,to:b.querySelector('.e-to').value,
+      school:bis[0]?.querySelector('.vn').value||'',schoolEn:bis[0]?.querySelector('.en-out').value||'',
+      major:bis[1]?.querySelector('.vn').value||'',majorEn:bis[1]?.querySelector('.en-out').value||'',
+      gpa:b.querySelector('.e-gpa').value,sch:b.querySelector('.e-sch').value});
+  });
+  document.querySelectorAll('#certList .cert-block').forEach(b=>{const bi=b.querySelector('.bi');s.cert.push({vi:bi.querySelector('.vn').value,en:bi.querySelector('.en-out').value});});
+  document.querySelectorAll('#workList .work-block').forEach(b=>{
+    const bis=b.querySelectorAll('.bi');
+    s.work.push({company:b.querySelector('.w-company').value,from:b.querySelector('.w-from').value,to:b.querySelector('.w-to').value,salary:b.querySelector('.w-salary').value,refpos:b.querySelector('.w-refpos').value,refmobile:b.querySelector('.w-refmobile').value,
+      bi:[...bis].map(x=>({vi:x.querySelector('.vn').value,en:x.querySelector('.en-out').value}))});
+  });
+  return s;
+}
+function restoreDOM(s){
+  if(!s)return;
+  Object.entries(s.fixed||{}).forEach(([id,val])=>{const e=document.getElementById(id);if(e)e.value=val;});
+  Object.entries(s.radios||{}).forEach(([n,val])=>{if(val){const e=document.querySelector(`input[name="${n}"][value="${val}"]`);if(e)e.checked=true;}});
+  // dynamic blocks first
+  (s.edu||[]).forEach(()=>addEdu());
+  (s.cert||[]).forEach(()=>addCert());
+  (s.work||[]).forEach(()=>addWork());
+  // now fill bi by data-key
+  FIXED_BI_KEYS.forEach(k=>{const bi=document.querySelector(`.field[data-key="${k}"] .bi`);if(bi&&s.bi&&s.bi[k]){bi.querySelector('.vn').value=s.bi[k].vi;bi.querySelector('.en-out').value=s.bi[k].en;}});
+  // edu blocks
+  document.querySelectorAll('#eduList .edu-block').forEach((b,i)=>{const e=s.edu[i];if(!e)return;
+    b.querySelector('.e-from').value=e.from;b.querySelector('.e-to').value=e.to;b.querySelector('.e-gpa').value=e.gpa;b.querySelector('.e-sch').value=e.sch;
+    const bis=b.querySelectorAll('.bi');if(bis[0]){bis[0].querySelector('.vn').value=e.school;bis[0].querySelector('.en-out').value=e.schoolEn;}if(bis[1]){bis[1].querySelector('.vn').value=e.major;bis[1].querySelector('.en-out').value=e.majorEn;}});
+  document.querySelectorAll('#certList .cert-block').forEach((b,i)=>{const c=s.cert[i];if(!c)return;const bi=b.querySelector('.bi');bi.querySelector('.vn').value=c.vi;bi.querySelector('.en-out').value=c.en;});
+  document.querySelectorAll('#workList .work-block').forEach((b,i)=>{const w=s.work[i];if(!w)return;
+    b.querySelector('.w-company').value=w.company;b.querySelector('.w-from').value=w.from;b.querySelector('.w-to').value=w.to;b.querySelector('.w-salary').value=w.salary;b.querySelector('.w-refpos').value=w.refpos;b.querySelector('.w-refmobile').value=w.refmobile;
+    const bis=b.querySelectorAll('.bi');(w.bi||[]).forEach((x,j)=>{if(bis[j]){bis[j].querySelector('.vn').value=x.vi;bis[j].querySelector('.en-out').value=x.en;}});});
+}
+
+/* ---------- export ---------- */
+function esc(s){return (s==null?'':String(s)).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+function biLine(vi,en){vi=(vi||'').trim();en=(en||'').trim();if(!vi&&!en)return '';return en&&en.toLowerCase()!==vi.toLowerCase()?`${esc(vi)} <i style="color:#555">(${esc(en)})</i>`:esc(vi||en);}
+
+function buildProfileHTML(d){
+  const row=(k,val)=> val?`<tr><td class="k">${k}</td><td>${val}</td></tr>`:'';
+  let edu=d.education.filter(e=>e.school||e.from).map(e=>
+    `<li>${esc(e.from)}–${esc(e.to)}: ${biLine(e.school,e.schoolEn)} — ${biLine(e.major,e.majorEn)}${e.gpa?', GPA '+esc(e.gpa):''}</li>`).join('');
+  let certs=d.certifications.map(c=>`<li>${esc(c)}</li>`).join('');
+  let work=d.workExperience.filter(w=>w.company||w.position).map((w,i)=>`
+    <div class="job">
+      <div class="job-h">${i+1}. ${esc(w.company)} ${w.companyType?'— '+biLine(w.companyType,w.companyTypeEn):''}</div>
+      <div class="job-meta">${esc(w.from)}–${esc(w.to)}${w.salary?' · '+esc(w.salary):''} · ${biLine(w.position,w.positionEn)}</div>
+      ${w.projectTypes?`<div>Dự án / Projects: ${biLine(w.projectTypes,w.projectTypesEn)}</div>`:''}
+      ${w.reasonLeaving?`<div>Lý do thôi việc / Reason for leaving: ${biLine(w.reasonLeaving,w.reasonLeavingEn)}</div>`:''}
+    </div>`).join('');
+  const genderEn=d.gender==='Nam'?'Male':(d.gender==='Nữ'?'Female':'');
+  return `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Hồ sơ ${esc(d.fullName)}</title>
+  <style>
+    *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#1a2230;font-size:12px;line-height:1.55;margin:0;padding:26px 30px}
+    h1{font-size:19px;color:#1F3864;margin:0 0 2px;letter-spacing:.5px}
+    .sub{color:#2E75B6;font-style:italic;font-size:12px;margin-bottom:2px}
+    .code{color:#888;font-size:10px;margin-bottom:14px}
+    h2{font-size:13px;color:#fff;background:#1F3864;padding:5px 10px;margin:16px 0 8px;letter-spacing:.4px}
+    table{width:100%;border-collapse:collapse;margin-bottom:4px}
+    td{padding:3px 8px;border-bottom:1px solid #e2e8f2;vertical-align:top}
+    td.k{width:34%;color:#445;font-weight:bold;background:#f3f6fb}
+    ul{margin:4px 0 8px 18px;padding:0}li{margin-bottom:3px}
+    .job{border-left:3px solid #2E75B6;padding:4px 0 4px 10px;margin-bottom:9px}
+    .job-h{font-weight:bold;color:#1F3864}.job-meta{color:#555;margin-bottom:2px}
+    .cvraw{white-space:pre-wrap;background:#f7f9fc;border:1px solid #e2e8f2;border-radius:6px;padding:10px;font-size:11px;color:#333}
+    .hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1F3864;padding-bottom:8px;margin-bottom:6px}
+    @media print{body{padding:14px 18px}}
+  </style></head><body>
+  <div class="hdr"><div><h1>HỒ SƠ ỨNG VIÊN — CANDIDATE PROFILE</h1><div class="sub">Handong Engineering &amp; Construction</div><div class="code">HDF-5003-RC-002-V02 · CV + Interview Sheet</div></div></div>
+
+  <h2>THÔNG TIN CÁ NHÂN / PERSONAL INFORMATION</h2>
+  <table>
+    ${row('Họ tên / Full name','<b>'+esc(d.fullName)+'</b>')}
+    ${row('Giới tính / Gender', d.gender?esc(d.gender)+(genderEn?' ('+genderEn+')':''):'')}
+    ${row('Ngày sinh / Date of birth', esc(d.dob))}
+    ${row('Nơi sinh / Place of birth', biLine(d.placeOfBirth,d.placeOfBirthEn))}
+    ${row('Điện thoại / Mobile', esc(d.phone))}
+    ${row('Email', esc(d.email))}
+    ${row('CMND-CCCD / National ID', esc(d.nationalId))}
+    ${row('Tình trạng hôn nhân / Marital status', esc(d.maritalStatus))}
+    ${row('Bằng cấp / Degree', biLine(d.degree,d.degreeEn))}
+    ${row('Chuyên ngành / Major', biLine(d.major,d.majorEn))}
+    ${row('Địa chỉ thường trú / Permanent address', biLine(d.permanentAddress,d.permanentAddressEn))}
+  </table>
+
+  <h2>THÔNG TIN TUYỂN DỤNG / RECRUITMENT</h2>
+  <table>
+    ${row('Vị trí ứng tuyển / Position', biLine(d.position,d.positionEn))}
+    ${row('Mức lương mong muốn / Expected salary', esc(d.expectedSalary))}
+    ${row('Ngày bắt đầu / Starting date', esc(d.startingDate))}
+    ${row('Nơi làm việc / Work location', esc(d.workLocation))}
+    ${row('Kênh tuyển dụng / Channel', biLine(d.recruitmentChannel,d.recruitmentChannelEn))}
+  </table>
+
+  ${edu?`<h2>HỌC VẤN / EDUCATION</h2><ul>${edu}</ul>`:''}
+  ${certs?`<h2>CHỨNG CHỈ / CERTIFICATIONS</h2><ul>${certs}</ul>`:''}
+  ${work?`<h2>KINH NGHIỆM LÀM VIỆC / WORK EXPERIENCE</h2>${work}`:''}
+  ${d.cvText?`<h2>NỘI DUNG CV GỐC / ORIGINAL CV</h2><div class="cvraw">${esc(d.cvText)}</div>`:''}
+  </body></html>`;
+}
+
+function downloadPDF(){
+  const data=collect();
+  if(!data.fullName){toast('Vui lòng nhập Họ tên trước');document.getElementById('fullName').focus();return;}
+  if(!data.cvText && !data.workExperience.some(w=>w.company||w.position)){
+    if(!confirm('Bạn chưa dán CV và cũng chưa điền Kinh nghiệm. Vẫn tạo PDF?'))return;
+  }
+  const html=buildProfileHTML(data);
+  let f=document.getElementById('printFrame');
+  if(!f){f=document.createElement('iframe');f.id='printFrame';f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);}
+  const fd=f.contentWindow.document;fd.open();fd.write(html);fd.close();
+  toast('Chọn "Lưu thành PDF / Save as PDF" trong hộp thoại in');
+  setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print();}catch(e){toast('Không mở được hộp in — thử lại');}},400);
+}
+
+function downloadJSON(){
+  const data=collect();
+  if(!data.fullName){toast('Vui lòng nhập Họ tên trước khi tải');document.getElementById('fullName').focus();return;}
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='Hoso-'+(data.fullName.replace(/\s+/g,'-'))+'.json';a.click();URL.revokeObjectURL(a.href);
+  toast('Đã tải hồ sơ — vui lòng gửi file này cho HR ✓');
+}
+function clearAll(){
+  if(!confirm('Xóa toàn bộ và làm lại từ đầu?'))return;
+  localStorage.removeItem(STORE);location.reload();
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800);}
+
+/* ---------- init ---------- */
+buildBiFields();
+document.querySelectorAll('input,select,textarea').forEach(inp=>inp.addEventListener('input',scheduleSave));
+let saved=null;try{saved=JSON.parse(localStorage.getItem(STORE));}catch(e){}
+if(saved){restoreDOM(saved);}
+else{addEdu();addCert();addWork();}
+</script>
+</body>
+</html>
