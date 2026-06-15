@@ -73,6 +73,32 @@
   .tr-btn.loading{pointer-events:none;opacity:.6}
   .tr-btn.done{background:var(--green-soft);border-color:#aedcc2;color:var(--green)}
   .bi-hint{font-size:11px;color:var(--faint);margin-top:4px}
+  .bi textarea.vn,.bi textarea.en-out{min-height:62px;resize:vertical}
+  .bi:has(textarea) .tr-btn{align-self:center;height:40px}
+
+  /* dropzone */
+  .dropzone{border:2px dashed var(--blue-line);background:var(--blue-soft);border-radius:var(--r);padding:22px 16px;text-align:center;cursor:pointer;transition:all .15s;color:var(--blue)}
+  .dropzone:hover,.dropzone.over{border-color:var(--blue);background:#dbe8f7}
+  .dropzone .dz-ic{font-size:26px;line-height:1}
+  .dropzone .dz-t{font-weight:600;font-size:13.5px;margin-top:6px}
+  .dropzone .dz-s{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .file-info{margin-top:10px;font-size:12.5px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 11px}
+  .file-info .nm{font-weight:600;color:var(--ink)}
+  .file-info .st{margin-left:auto;font-size:11px}
+  .file-info .st.ok{color:var(--green)}.file-info .st.load{color:var(--amber)}.file-info .st.err{color:#d33}
+  .file-info .x{cursor:pointer;color:var(--faint);font-weight:700;padding:2px 6px;border-radius:4px}
+  .file-info .x:hover{background:#fde8e8;color:#d33}
+
+  /* image thumbs */
+  .thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .thumb{position:relative;width:90px;height:90px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);background:#fff}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .thumb .x{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+  .thumb .x:hover{background:#d33}
+  .photo-box{width:110px;height:140px;border:2px dashed var(--blue-line);border-radius:var(--r-sm);background:var(--blue-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--blue);text-align:center;font-size:11px;overflow:hidden;position:relative;flex-shrink:0}
+  .photo-box:hover{border-color:var(--blue)}
+  .photo-box img{width:100%;height:100%;object-fit:cover}
+  .photo-box .x{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.6);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
   @media(max-width:600px){.bi{grid-template-columns:1fr;gap:6px}.tr-btn{width:100%;height:34px}}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -133,23 +159,54 @@
 
   <div class="intro">
     <span style="font-size:16px">💡</span>
-    <div><b>2 cách điền / Two ways:</b> ① Nếu bạn <b>đã có CV</b> → dán nội dung vào ô "CV của bạn" bên dưới. ② Nếu <b>chưa có CV</b> → điền trực tiếp phần Kinh nghiệm. Ở mỗi ô có nút <b>🌐</b> để <b>tự dịch sang tiếng Anh</b>. Xong bấm <b>"Tải PDF"</b> (nộp hồ sơ / để lọc CV) và <b>"Tải dữ liệu"</b> gửi lại HR.
-    <br><span style="font-size:12px;opacity:.85">Either paste your existing CV, or fill the experience section directly. Click 🌐 to auto-translate, then download PDF + data file and send back to HR.</span></div>
+    <div><b>3 cách điền / Three ways:</b> ① <b>Đã có CV</b> → kéo thả file CV vào ô "CV của bạn" (hệ thống tự đọc). ② <b>Chưa có CV</b> → điền phần Kinh nghiệm chi tiết như một CV. ③ Đừng quên <b>đính kèm ảnh chân dung &amp; bằng cấp</b>. Mỗi ô có nút <b>🌐</b> để tự dịch sang tiếng Anh. Xong bấm <b>"Tải PDF"</b> + <b>"Tải dữ liệu"</b> gửi HR.
+    <br><span style="font-size:12px;opacity:.85">Drag &amp; drop your CV, or fill the experience section like a CV, attach photo &amp; certificates, click 🌐 to translate, then download and send to HR.</span></div>
   </div>
 
-  <!-- CV PASTE (optional) -->
+  <!-- CV UPLOAD (drag & drop) -->
   <div class="section">
-    <div class="sec-head">CV CỦA BẠN <span class="en">Your CV — tùy chọn / optional</span></div>
+    <div class="sec-head">CV CỦA BẠN <span class="en">Your CV — kéo thả file / drag &amp; drop (tùy chọn)</span></div>
     <div class="sec-body">
-      <div class="field">
-        <label>Đã có CV? Dán toàn bộ nội dung vào đây <span class="en">(Already have a CV? Paste its full content here)</span></label>
-        <textarea id="cvText" style="min-height:130px" placeholder="Mở file CV của bạn, copy toàn bộ và dán vào đây. Hệ thống sẽ gộp vào hồ sơ. / Copy & paste your whole CV here."></textarea>
-        <div class="bi-hint">Nếu bạn dán CV ở đây thì có thể bỏ qua phần Kinh nghiệm bên dưới (hoặc điền thêm cho rõ). Nếu chưa có CV, hãy điền phần Kinh nghiệm.</div>
+      <div class="dropzone" id="cvDrop" onclick="document.getElementById('cvFile').click()">
+        <div class="dz-ic">📄⬆️</div>
+        <div class="dz-t">Kéo thả CV vào đây hoặc bấm để chọn file</div>
+        <div class="dz-s">Drag &amp; drop your CV — hỗ trợ PDF, Word (.docx), TXT</div>
+      </div>
+      <input type="file" id="cvFile" accept=".pdf,.doc,.docx,.txt" hidden>
+      <div id="cvFileInfo"></div>
+      <div class="field" style="margin-top:12px">
+        <label>Nội dung CV <span class="en">(CV content — tự động trích từ file, có thể sửa hoặc tự dán)</span></label>
+        <textarea id="cvText" style="min-height:120px" placeholder="Nội dung CV sẽ tự hiện ở đây sau khi bạn thả file. Bạn cũng có thể tự dán hoặc gõ vào đây."></textarea>
+        <div class="bi-hint">Nếu đã có CV: thả file ở trên (hệ thống tự đọc chữ). Nếu chưa có CV: bỏ qua phần này và điền phần Kinh nghiệm bên dưới.</div>
       </div>
     </div>
   </div>
 
-  <!-- CANDIDATE INFORMATION -->
+  <!-- IMAGE ATTACHMENTS -->
+  <div class="section">
+    <div class="sec-head">HÌNH ẢNH ĐÍNH KÈM <span class="en">Photo &amp; Attachments</span></div>
+    <div class="sec-body">
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start">
+        <div>
+          <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Ảnh chân dung 3x4 <span class="en" style="color:var(--muted);font-weight:400;font-style:italic;font-size:12px">(Profile photo)</span></label>
+          <div class="photo-box" id="photoBox" onclick="if(!photoData)document.getElementById('photoFile').click()">
+            <span>📷<br>Bấm chọn ảnh</span>
+          </div>
+          <input type="file" id="photoFile" accept="image/*" hidden>
+        </div>
+        <div style="flex:1;min-width:240px">
+          <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Hình ảnh khác <span class="en" style="color:var(--muted);font-weight:400;font-style:italic;font-size:12px">(Bằng cấp, chứng chỉ... / Certificates, degrees)</span></label>
+          <div class="dropzone" id="imgDrop" style="padding:16px" onclick="document.getElementById('imgFiles').click()">
+            <div class="dz-ic">🖼️</div>
+            <div class="dz-t">Kéo thả ảnh vào đây hoặc bấm chọn</div>
+            <div class="dz-s">Bằng cấp, chứng chỉ, CMND... — nhiều ảnh / multiple images</div>
+          </div>
+          <input type="file" id="imgFiles" accept="image/*" multiple hidden>
+          <div class="thumbs" id="imgThumbs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="section">
     <div class="sec-head">THÔNG TIN ỨNG VIÊN <span class="en">Candidate Information</span></div>
     <div class="sec-body">
@@ -260,13 +317,16 @@
       <div class="field" style="margin-top:18px"><label>Chứng chỉ <span class="en">(Certifications)</span></label></div>
       <div id="certList"></div>
       <button class="add-btn" onclick="addCert()">+ Thêm chứng chỉ / Add certification</button>
+
+      <div class="field" data-bi data-area data-key="skills" style="margin-top:18px"><label>Kỹ năng chuyên môn <span class="en">(Professional skills — VD: AutoCAD, MS Project, quản lý đội thi công...)</span></label></div>
     </div>
   </div>
 
   <!-- WORK EXPERIENCE -->
   <div class="section">
-    <div class="sec-head">KINH NGHIỆM LÀM VIỆC <span class="en">Work Experience — mới nhất trước / most recent first</span></div>
+    <div class="sec-head">KINH NGHIỆM LÀM VIỆC <span class="en">Work Experience — điền chi tiết như CV, mới nhất trước / fill like a CV, most recent first</span></div>
     <div class="sec-body">
+      <div class="bi-hint" style="margin-bottom:10px;font-size:12px">Nếu bạn chưa có CV, hãy điền thật chi tiết từng công việc bên dưới (đặc biệt phần <b>Mô tả công việc &amp; thành tích</b>) — đây chính là CV của bạn.</div>
       <div id="workList"></div>
       <button class="add-btn" onclick="addWork()">+ Thêm kinh nghiệm / Add work experience</button>
     </div>
@@ -298,15 +358,17 @@ function buildBiFields(){
     f.dataset.key = key;
     const wrap=document.createElement('div');
     wrap.className='bi';
+    const tag=f.hasAttribute('data-area')?'textarea':'input type="text"';
+    const close=f.hasAttribute('data-area')?'</textarea>':'';
     wrap.innerHTML=`
-      <input type="text" class="vn" placeholder="Tiếng Việt">
+      <${tag} class="vn" placeholder="Tiếng Việt">${close}
       <button class="tr-btn" title="Dịch sang tiếng Anh" type="button">🌐</button>
-      <input type="text" class="en-out" placeholder="English (tự động)">`;
+      <${tag} class="en-out" placeholder="English (tự động)">${close}`;
     f.appendChild(wrap);
     const hint=document.createElement('div');hint.className='bi-hint';hint.textContent='Gõ tiếng Việt → bấm 🌐 để dịch';
     f.appendChild(hint);
     wrap.querySelector('.tr-btn').addEventListener('click',()=>translateField(wrap));
-    wrap.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',scheduleSave));
+    wrap.querySelectorAll('input,textarea').forEach(inp=>inp.addEventListener('input',scheduleSave));
   });
 }
 
@@ -391,6 +453,7 @@ function addWork(){
       <div class="field"><label>Mức lương <span class="en">(Salary)</span></label><input type="text" class="w-salary"></div>
     </div>
     <div class="field" data-bi data-key="wPos${workN}"><label>Vị trí <span class="en">(Position)</span></label></div>
+    <div class="field" data-bi data-area data-key="wDesc${workN}"><label>Mô tả công việc, trách nhiệm &amp; thành tích <span class="en">(Job description, responsibilities &amp; achievements — như CV chuẩn)</span></label></div>
     <div class="field" data-bi data-key="wProj${workN}"><label>Loại hình dự án đã tham gia <span class="en">(Project types)</span></label></div>
     <div class="field" data-bi data-key="wReason${workN}"><label>Lý do thôi việc <span class="en">(Reason for leaving)</span></label></div>
     <div class="grid3">
@@ -435,7 +498,9 @@ function collect(){
     workLocation:radio('workloc'), transferDifficulty:radio('transfer'),
     relativeAtHandong:{name:v('relName'),relation:bk('relRel').vi,relationEn:bk('relRel').en},
     recruitmentChannel:bk('channel').vi, recruitmentChannelEn:bk('channel').en,
+    skills:bk('skills').vi, skillsEn:bk('skills').en,
     cvText:v('cvText'),
+    photo:photoData||'', images:attachedImages.map(im=>({name:im.name,dataUrl:im.dataUrl})),
     education:[], certifications:[], workExperience:[]
   };
   // education
@@ -455,16 +520,17 @@ function collect(){
   });
   // work
   document.querySelectorAll('#workList .work-block').forEach(b=>{
-    const bis=b.querySelectorAll('.bi'); // order: type, pos, proj, reason, refDept
+    const bis=b.querySelectorAll('.bi'); // order: type, pos, desc, proj, reason, refDept
     data.workExperience.push({
       company:b.querySelector('.w-company').value.trim(),
       companyType:bis[0]?.querySelector('.vn').value.trim()||'', companyTypeEn:bis[0]?.querySelector('.en-out').value.trim()||'',
       from:b.querySelector('.w-from').value.trim(), to:b.querySelector('.w-to').value.trim(), salary:b.querySelector('.w-salary').value.trim(),
       position:bis[1]?.querySelector('.vn').value.trim()||'', positionEn:bis[1]?.querySelector('.en-out').value.trim()||'',
-      projectTypes:bis[2]?.querySelector('.vn').value.trim()||'', projectTypesEn:bis[2]?.querySelector('.en-out').value.trim()||'',
-      reasonLeaving:bis[3]?.querySelector('.vn').value.trim()||'', reasonLeavingEn:bis[3]?.querySelector('.en-out').value.trim()||'',
+      description:bis[2]?.querySelector('.vn').value.trim()||'', descriptionEn:bis[2]?.querySelector('.en-out').value.trim()||'',
+      projectTypes:bis[3]?.querySelector('.vn').value.trim()||'', projectTypesEn:bis[3]?.querySelector('.en-out').value.trim()||'',
+      reasonLeaving:bis[4]?.querySelector('.vn').value.trim()||'', reasonLeavingEn:bis[4]?.querySelector('.en-out').value.trim()||'',
       reference:{position:b.querySelector('.w-refpos').value.trim(),
-                 dept:bis[4]?.querySelector('.vn').value.trim()||'', deptEn:bis[4]?.querySelector('.en-out').value.trim()||'',
+                 dept:bis[5]?.querySelector('.vn').value.trim()||'', deptEn:bis[5]?.querySelector('.en-out').value.trim()||'',
                  mobile:b.querySelector('.w-refmobile').value.trim()}
     });
   });
@@ -480,10 +546,10 @@ function save(){
     document.getElementById('saveStatus').textContent='Đã lưu nháp';
   }catch(e){console.warn(e);}
 }
-const FIXED_BI_KEYS=['placeOfBirth','ethnicity','religion','placeOfIssue','degree','major','permAddr','tempAddr','emRel','position','relRel','channel'];
+const FIXED_BI_KEYS=['placeOfBirth','ethnicity','religion','placeOfIssue','degree','major','permAddr','tempAddr','emRel','position','relRel','channel','skills'];
 // serialize raw DOM values (vn+en for bi, plus dynamic blocks) to restore exactly
 function serializeDOM(){
-  const s={fixed:{},bi:{},edu:[],cert:[],work:[],radios:{}};
+  const s={fixed:{},bi:{},edu:[],cert:[],work:[],radios:{},photo:photoData,images:attachedImages};
   ['fullName','dob','nationalId','issueDate','phone','email','height','weight','expectedSalary','startingDate','emName','emMobile','relName','cvText'].forEach(id=>s.fixed[id]=v(id));
   ['gender','marital','workloc','transfer'].forEach(n=>s.radios[n]=radio(n));
   FIXED_BI_KEYS.forEach(k=>{const f=document.querySelector(`.field[data-key="${k}"] .bi`);if(f)s.bi[k]={vi:f.querySelector('.vn').value,en:f.querySelector('.en-out').value};});
@@ -510,6 +576,8 @@ function restoreDOM(s){
   (s.edu||[]).forEach(()=>addEdu());
   (s.cert||[]).forEach(()=>addCert());
   (s.work||[]).forEach(()=>addWork());
+  // photo & images
+  photoData=s.photo||''; attachedImages=Array.isArray(s.images)?s.images:[]; renderPhoto(); renderImages();
   // now fill bi by data-key
   FIXED_BI_KEYS.forEach(k=>{const bi=document.querySelector(`.field[data-key="${k}"] .bi`);if(bi&&s.bi&&s.bi[k]){bi.querySelector('.vn').value=s.bi[k].vi;bi.querySelector('.en-out').value=s.bi[k].en;}});
   // edu blocks
@@ -535,6 +603,7 @@ function buildProfileHTML(d){
     <div class="job">
       <div class="job-h">${i+1}. ${esc(w.company)} ${w.companyType?'— '+biLine(w.companyType,w.companyTypeEn):''}</div>
       <div class="job-meta">${esc(w.from)}–${esc(w.to)}${w.salary?' · '+esc(w.salary):''} · ${biLine(w.position,w.positionEn)}</div>
+      ${w.description?`<div class="job-desc">${biLine(w.description,w.descriptionEn).replace(/\n/g,'<br>')}</div>`:''}
       ${w.projectTypes?`<div>Dự án / Projects: ${biLine(w.projectTypes,w.projectTypesEn)}</div>`:''}
       ${w.reasonLeaving?`<div>Lý do thôi việc / Reason for leaving: ${biLine(w.reasonLeaving,w.reasonLeavingEn)}</div>`:''}
     </div>`).join('');
@@ -552,11 +621,14 @@ function buildProfileHTML(d){
     ul{margin:4px 0 8px 18px;padding:0}li{margin-bottom:3px}
     .job{border-left:3px solid #2E75B6;padding:4px 0 4px 10px;margin-bottom:9px}
     .job-h{font-weight:bold;color:#1F3864}.job-meta{color:#555;margin-bottom:2px}
+    .job-desc{margin:3px 0;color:#222}
     .cvraw{white-space:pre-wrap;background:#f7f9fc;border:1px solid #e2e8f2;border-radius:6px;padding:10px;font-size:11px;color:#333}
     .hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1F3864;padding-bottom:8px;margin-bottom:6px}
-    @media print{body{padding:14px 18px}}
+    .photo{width:96px;height:120px;object-fit:cover;border:1px solid #ccc;border-radius:4px;margin-left:14px}
+    .imgs{display:flex;flex-wrap:wrap;gap:8px}.imgs img{max-width:200px;max-height:170px;border:1px solid #ccc;border-radius:4px}
+    @media print{body{padding:14px 18px}.job,.imgs img{break-inside:avoid}}
   </style></head><body>
-  <div class="hdr"><div><h1>HỒ SƠ ỨNG VIÊN — CANDIDATE PROFILE</h1><div class="sub">Handong Engineering &amp; Construction</div><div class="code">HDF-5003-RC-002-V02 · CV + Interview Sheet</div></div></div>
+  <div class="hdr"><div><h1>HỒ SƠ ỨNG VIÊN — CANDIDATE PROFILE</h1><div class="sub">Handong Engineering &amp; Construction</div><div class="code">HDF-5003-RC-002-V02 · CV + Interview Sheet</div></div>${d.photo?`<img class="photo" src="${d.photo}" alt="photo">`:''}</div>
 
   <h2>THÔNG TIN CÁ NHÂN / PERSONAL INFORMATION</h2>
   <table>
@@ -584,8 +656,10 @@ function buildProfileHTML(d){
 
   ${edu?`<h2>HỌC VẤN / EDUCATION</h2><ul>${edu}</ul>`:''}
   ${certs?`<h2>CHỨNG CHỈ / CERTIFICATIONS</h2><ul>${certs}</ul>`:''}
+  ${(d.skills||d.skillsEn)?`<h2>KỸ NĂNG / SKILLS</h2><div>${biLine(d.skills,d.skillsEn).replace(/\n/g,'<br>')}</div>`:''}
   ${work?`<h2>KINH NGHIỆM LÀM VIỆC / WORK EXPERIENCE</h2>${work}`:''}
   ${d.cvText?`<h2>NỘI DUNG CV GỐC / ORIGINAL CV</h2><div class="cvraw">${esc(d.cvText)}</div>`:''}
+  ${(d.images&&d.images.length)?`<h2>HÌNH ẢNH ĐÍNH KÈM / ATTACHMENTS</h2><div class="imgs">${d.images.map(im=>`<img src="${im.dataUrl}">`).join('')}</div>`:''}
   </body></html>`;
 }
 
@@ -617,9 +691,115 @@ function clearAll(){
 }
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800);}
 
+/* ---------- IMAGES (photo + attachments) ---------- */
+let photoData='';            // dataURL ảnh chân dung
+let attachedImages=[];       // [{name,dataUrl}]
+
+function downscaleImage(file, maxDim, quality){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let {width:w,height:h}=img;
+        if(w>maxDim||h>maxDim){ if(w>=h){h=Math.round(h*maxDim/w);w=maxDim;} else {w=Math.round(w*maxDim/h);h=maxDim;} }
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg',quality));
+      };
+      img.onerror=reject; img.src=e.target.result;
+    };
+    reader.onerror=reject; reader.readAsDataURL(file);
+  });
+}
+async function handlePhoto(file){
+  if(!file||!file.type.startsWith('image/'))return;
+  try{ photoData=await downscaleImage(file,600,0.8); renderPhoto(); save(); }
+  catch(e){ toast('Không đọc được ảnh'); }
+}
+function renderPhoto(){
+  const box=document.getElementById('photoBox');
+  if(photoData){ box.innerHTML=`<img src="${photoData}" alt="photo"><span class="x" onclick="event.stopPropagation();photoData='';renderPhoto();save()">×</span>`; }
+  else { box.innerHTML='<span>📷<br>Bấm chọn ảnh</span>'; }
+}
+async function handleImages(files){
+  for(const f of files){
+    if(!f.type.startsWith('image/'))continue;
+    if(attachedImages.length>=12){toast('Tối đa 12 ảnh');break;}
+    try{ const url=await downscaleImage(f,1200,0.7); attachedImages.push({name:f.name,dataUrl:url}); }catch(e){}
+  }
+  renderImages(); save();
+}
+function renderImages(){
+  const wrap=document.getElementById('imgThumbs');
+  wrap.innerHTML=attachedImages.map((im,i)=>`<div class="thumb"><img src="${im.dataUrl}" title="${im.name.replace(/"/g,'')}"><span class="x" onclick="attachedImages.splice(${i},1);renderImages();save()">×</span></div>`).join('');
+}
+
+/* ---------- CV FILE (drag & drop, extract text) ---------- */
+function setCvInfo(name,status,cls){
+  document.getElementById('cvFileInfo').innerHTML = name
+    ? `<div class="file-info"><span>📎</span><span class="nm">${name.replace(/</g,'')}</span><span class="st ${cls||''}">${status}</span><span class="x" onclick="clearCvFile()">×</span></div>` : '';
+}
+function clearCvFile(){document.getElementById('cvFileInfo').innerHTML='';document.getElementById('cvFile').value='';}
+
+async function handleCvFile(file){
+  if(!file)return;
+  const ext=file.name.toLowerCase().split('.').pop();
+  setCvInfo(file.name,'Đang đọc...','load');
+  try{
+    let text='';
+    if(ext==='txt'){ text=await file.text(); }
+    else if(ext==='pdf'){ text=await extractPdf(file); }
+    else if(ext==='docx'){ text=await extractDocx(file); }
+    else if(ext==='doc'){ setCvInfo(file.name,'Định dạng .doc cũ — vui lòng lưu thành PDF/DOCX hoặc dán tay','err'); return; }
+    else { setCvInfo(file.name,'Định dạng không hỗ trợ','err'); return; }
+    text=(text||'').trim();
+    if(text){
+      const cur=document.getElementById('cvText').value.trim();
+      document.getElementById('cvText').value = cur ? cur+'\n\n'+text : text;
+      setCvInfo(file.name,'✓ Đã đọc xong','ok'); save();
+    } else { setCvInfo(file.name,'Không trích được chữ (CV scan ảnh?) — vui lòng dán tay','err'); }
+  }catch(e){ console.error(e); setCvInfo(file.name,'Lỗi đọc file — thử lại hoặc dán tay','err'); }
+}
+
+let _pdfjs=null;
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('load '+src));document.head.appendChild(s);});}
+async function extractPdf(file){
+  if(!_pdfjs){
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+    _pdfjs=window.pdfjsLib;
+    _pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  const buf=await file.arrayBuffer();
+  const pdf=await _pdfjs.getDocument({data:new Uint8Array(buf)}).promise;
+  let out='';
+  for(let p=1;p<=pdf.numPages;p++){ const page=await pdf.getPage(p); const c=await page.getTextContent(); out+=c.items.map(i=>i.str).join(' ')+'\n'; }
+  return out;
+}
+async function extractDocx(file){
+  if(!window.mammoth){ await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js'); }
+  const buf=await file.arrayBuffer();
+  const r=await window.mammoth.extractRawText({arrayBuffer:buf});
+  return r.value;
+}
+
+/* ---------- wire up drag & drop zones ---------- */
+function wireDrop(zoneId,handler,multiple){
+  const z=document.getElementById(zoneId);
+  ['dragover','dragenter'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add('over');}));
+  ['dragleave','dragend'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.remove('over');}));
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');const fs=Array.from(e.dataTransfer.files);if(fs.length)handler(multiple?fs:fs[0]);});
+}
+
 /* ---------- init ---------- */
 buildBiFields();
 document.querySelectorAll('input,select,textarea').forEach(inp=>inp.addEventListener('input',scheduleSave));
+// file inputs
+document.getElementById('cvFile').addEventListener('change',function(){if(this.files[0])handleCvFile(this.files[0]);});
+document.getElementById('photoFile').addEventListener('change',function(){if(this.files[0])handlePhoto(this.files[0]);this.value='';});
+document.getElementById('imgFiles').addEventListener('change',function(){handleImages(Array.from(this.files));this.value='';});
+wireDrop('cvDrop',handleCvFile,false);
+wireDrop('imgDrop',handleImages,true);
 let saved=null;try{saved=JSON.parse(localStorage.getItem(STORE));}catch(e){}
 if(saved){restoreDOM(saved);}
 else{addEdu();addCert();addWork();}
